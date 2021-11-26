@@ -1,0 +1,12 @@
+version: '2'
+services:
+  server:
+    image: gps_service_app
+    ports:
+      - "50051"
+  client:
+    image: gps_service_client_app
+    depends_on:
+      - server
+    environment:
+      - GPS_SERVER=server
