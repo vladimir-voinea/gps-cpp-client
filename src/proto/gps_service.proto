@@ -15,24 +15,26 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "io.grpc.examples.helloworld";
-option java_outer_classname = "HelloWorldProto";
-option objc_class_prefix = "HLW";
+option java_package = "io.grpc.examples.gps_service";
+option java_outer_classname = "GpsService";
+option objc_class_prefix = "GPSS";
 
-package helloworld;
+package gps_service;
 
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+service GpsService {
+  rpc StreamLocation (StreamLocationRequest) returns (stream StreamLocationResponse) {}
 }
 
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
+message Point {
+  double latitude = 1;
+  double longitude = 2;
+  double bearing = 3;
+  int64 timestamp = 4;
 }
 
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
+message StreamLocationRequest {
+}
+
+message StreamLocationResponse {
+  Point point = 1;
 }
