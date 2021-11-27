@@ -17,14 +17,14 @@ docker container create --name extract $IMAGE_NAME:build
 docker container cp extract:$APP1_PATH_IN_BUILD_IMAGE ./app
 
 echo Building $APP1_NAME:latest
-docker build --no-cache -t $APP1_NAME:latest . --progress plain
+docker build -t $APP1_NAME:latest . --progress plain
 rm ./app
 
 #################
 docker container cp extract:$APP2_PATH_IN_BUILD_IMAGE ./app
 
 echo Building $APP2_NAME:latest
-docker build --no-cache -t $APP2_NAME:latest . --progress plain
+docker build -t $APP2_NAME:latest . --progress plain
 rm ./app
 
 #################

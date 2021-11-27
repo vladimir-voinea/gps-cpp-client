@@ -1,14 +1,20 @@
 #include <gps_service_lib/gps_service.hpp>
 
+#include "gpsd.hpp"
+
 grpc::Status GpsService::StreamLocation(grpc::ServerContext* ctx, 
                             const gps_service::StreamLocationRequest* request, 
                             grpc::ServerWriter<gps_service::StreamLocationResponse>* writer)
 {
+    gpsd gps;
+
     for(auto i = 0u; i < 100; i++)
     {
+        const auto fix = gps.run_until_fix();
+        
         gps_service::Point point;
-        point.set_latitude(static_cast<double>(i));
-        point.set_longitude(static_cast<double>(i));
+        point.set_latitude(fix.latitude);
+        point.set_longitude(fix.longitude);
 
         gps_service::StreamLocationResponse res;
         res.mutable_point()->CopyFrom(point);

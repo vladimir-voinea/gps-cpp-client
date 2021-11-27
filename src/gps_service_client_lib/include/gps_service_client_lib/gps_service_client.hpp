@@ -30,7 +30,7 @@ class GpsServiceClient {
 public:
     GpsServiceClient(std::shared_ptr<grpc::Channel> channel);
 
-    void StreamLocation(std::function<void(gps_service::StreamLocationResponse)> func);
+    void StreamLocation(std::function<bool(const gps_service::StreamLocationResponse&)> func);
 
 private:
     std::unique_ptr<gps_service::GpsService::Stub> stub_;

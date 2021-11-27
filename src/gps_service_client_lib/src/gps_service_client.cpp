@@ -6,7 +6,7 @@ GpsServiceClient::GpsServiceClient(std::shared_ptr<grpc::Channel> channel)
     : stub_(gps_service::GpsService::NewStub(channel))
 {}
 
-void GpsServiceClient::StreamLocation(std::function<void(gps_service::StreamLocationResponse)> func)
+void GpsServiceClient::StreamLocation(std::function<bool(const gps_service::StreamLocationResponse&)> func)
 {
     grpc::ClientContext ctx;
     gps_service::StreamLocationRequest req;
@@ -14,14 +14,10 @@ void GpsServiceClient::StreamLocation(std::function<void(gps_service::StreamLoca
 
     std::unique_ptr<grpc::ClientReader<gps_service::StreamLocationResponse>> reader(stub_->StreamLocation(&ctx, req));
 
-    while(reader->Read(&res)) {
-        func(res);
+    bool go_on = true;
+    while(go_on && reader->Read(&res)) {
+        go_on = func(res);
     }
 
-    grpc::Status status = reader->Finish();
-    if(status.ok()) {
-        std::cout << "StreamLocation rpc succeeded" << std::endl;
-    } else {
-        std::cout << "StreamLocation rpc failed" << std::endl;
-    }
+    reader->Finish();
 }

@@ -4,6 +4,7 @@ services:
     image: gps_service_app
     ports:
       - "50051"
+      - "2947:2947"
   client:
     image: gps_service_client_app
     depends_on:

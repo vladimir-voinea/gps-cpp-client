@@ -13,7 +13,8 @@ int main(int argc, char** argv) {
     GpsServiceClient client(grpc::CreateChannel(server_string, grpc::InsecureChannelCredentials()));
 
     client.StreamLocation([](auto res) {
-        std::cout << res.point().latitude() << ' ' << '\n';
+        std::cout << "latitude : " << res.point().latitude() << " longitude: " << res.point().longitude() << '\n';
+        return true;
     });
 
     return 0;
