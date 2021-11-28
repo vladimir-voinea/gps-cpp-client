@@ -1,7 +1,6 @@
 ARG BASE_IMAGE_VERSION
 FROM vladimir1/cxx_base:$BASE_IMAGE_VERSION as base
 
-COPY . /source
 WORKDIR /source
 
-RUN ./build-cmake.sh
+ENTRYPOINT ["./build-cmake.sh"]
