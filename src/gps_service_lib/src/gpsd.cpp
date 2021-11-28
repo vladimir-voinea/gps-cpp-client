@@ -8,7 +8,7 @@
 
 gpsd::gpsd()
 {
-    const auto gpsd_open_result = gps_open(GPSD_SHARED_MEMORY, NULL, &gps_data_);
+    const auto gpsd_open_result = gps_open("localhost", "2947", &gps_data_);
     spdlog::info("gpsd_open result: {}", gpsd_open_result);
 
     if (gpsd_open_result != 0) {

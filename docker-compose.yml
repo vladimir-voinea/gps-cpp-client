@@ -2,13 +2,13 @@ version: '2'
 services:
   server:
     image: gps_service_app
-    ports:
-      - "50051"
     volumes:
       - /var/run/gpsd.sock:/var/run/gpsd.sock
+    network_mode: host
   client:
     image: gps_service_client_app
     depends_on:
       - server
     environment:
       - GPS_SERVER=server
+    network_mode: host
