@@ -1,4 +1,5 @@
 #include <gst/gst.h>
+#include <spdlog/spdlog.h>
 
 int
 main (int argc, char *argv[])
@@ -9,12 +10,19 @@ main (int argc, char *argv[])
 
   /* Initialize GStreamer */
   gst_init (&argc, &argv);
+  GError *error = nullptr;
 
   /* Build the pipeline */
   pipeline =
       gst_parse_launch
       ("playbin uri=https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm",
-      NULL);
+      &error);
+
+  if(error) {
+    spdlog::error(error->message);
+    g_clear_error(&error);
+    return EXIT_FAILURE;
+  }
 
   /* Start playing */
   gst_element_set_state (pipeline, GST_STATE_PLAYING);
