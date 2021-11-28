@@ -6,10 +6,12 @@
 #include <iostream>
 #include <cmath>
 
-
 gpsd::gpsd()
 {
-    if ((gps_open("localhost", "2947", &gps_data_)) == -1) {
+    const auto gpsd_open_result = gps_open("localhost", "2947", &gps_data_);
+    std::cout << "gpsd_open_result: " << gpsd_open_result << '\n';
+
+    if (gpsd_open_result == -1) {
         std::cout << "code: " << errno << " reason: " <<  gps_errstr(errno) << '\n';
     }
 }
@@ -18,7 +20,8 @@ gps_fix gpsd::run_until_fix()
 {
     for(;;)
     {
-        if ((gps_read(&gps_data_,NULL,0)) == -1) {
+        const auto gps_read_result = gps_read(&gps_data_, NULL, 0);
+        if (gps_read_result == -1) {
             std::cout << "error occured reading gps data. code: " << errno << " reason: " << gps_errstr(errno) << '\n';
         } else {
             if((gps_data_.status == STATUS_FIX) &&  (gps_data_.fix.mode == MODE_2D || gps_data_.fix.mode == MODE_3D) &&
