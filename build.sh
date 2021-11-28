@@ -1,7 +1,11 @@
-arch=$(uname -i)
+arch=$(uname -m)
+
+BASE_IMAGE_VERSION=""
 if [[ $arch == x86_64* ]]; then
+    echo "Detected amd64"
     BASE_IMAGE_VERSION="1.3.0-ubuntu-dynamic"
 elif  [[ $arch == arm* ]]; then
+    echo "Detected ARM"
     BASE_IMAGE_VERSION="1.3.0-ubuntu-dynamic-armhf"
 fi
 

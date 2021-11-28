@@ -30,7 +30,6 @@ gps_fix gpsd::run_until_fix()
                     gps_fix fix;
                     fix.latitude = gps_data_.fix.latitude;
                     fix.longitude = gps_data_.fix.longitude;
-                    //fix.timestamp = (gps_data_.fix.time.tv_sec * 1000000ULL + gps_data_.fix.time.tv_nsec) * 1000;
 
                     return fix;
             } else {

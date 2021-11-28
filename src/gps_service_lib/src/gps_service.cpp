@@ -10,11 +10,11 @@ grpc::Status GpsService::StreamLocation(grpc::ServerContext* ctx,
 
     for(auto i = 0u; i < 100; i++)
     {
-        const auto fix = gps.run_until_fix();
+        //const auto fix = gps.run_until_fix();
         
         gps_service::Point point;
-        point.set_latitude(fix.latitude);
-        point.set_longitude(fix.longitude);
+        point.set_latitude(55.f);
+        point.set_longitude(33.f);
 
         gps_service::StreamLocationResponse res;
         res.mutable_point()->CopyFrom(point);
@@ -39,4 +39,6 @@ void GpsService::run_server()
     std::cout << "Server listening on " << server_address << std::endl;
 
     server->Wait();
+
+    std::cout << "Done wait\n";
 }
