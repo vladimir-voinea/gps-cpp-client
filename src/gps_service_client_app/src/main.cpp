@@ -13,9 +13,11 @@ int main(int argc, char** argv) {
 
     GpsServiceClient client(grpc::CreateChannel(server_string, grpc::InsecureChannelCredentials()));
 
-    client.StreamLocation([](auto res) {
+    int fixes = 100;
+    client.StreamLocation([fixes](auto res) mutable {
         spdlog::info("Latitude: {} Longitude: {}", res.point().latitude(), res.point().longitude());
-        return true;
+        fixes--;
+        return fixes;
     });
 
     return 0;

@@ -31,13 +31,10 @@ message Point {
   double latitude = 2;
   double longitude = 3;
   double altitude = 4;
-  float speed = 5;
-  float bearing = 6;
 
-  float horizontal_accuracy_meters = 7;
-  float vertical_accuracy_meters = 8;
-  float speed_accuracy_mps = 9;
-  float bearing_accuracy_degrees = 10;
+  double speed = 5;
+  double bearing = 6;
+  double climb = 7;
 }
 
 message StreamLocationRequest {

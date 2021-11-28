@@ -2,13 +2,25 @@ version: '2'
 services:
   server:
     image: gps_service_app
-    volumes:
-      - /var/run/gpsd.sock:/var/run/gpsd.sock
-    network_mode: host
+    depends_on:
+      - gpsd
+    environment:
+      - GPSD_HOST=gpsd
+      - GPSD_PORT=2947
+    ports:
+      - "50051"
   client:
     image: gps_service_client_app
     depends_on:
       - server
     environment:
       - GPS_SERVER=server
-    network_mode: host
+  gpsd:
+    image: forcedinductionz/docker-gpsd
+    ports:
+      - "2947:2947"
+    devices:
+      - /dev/ttyACM0
+    command: -D2 /dev/ttyACM0
+    logging:
+      driver: "none"

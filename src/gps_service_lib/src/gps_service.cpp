@@ -7,23 +7,37 @@
 grpc::Status GpsService::StreamLocation(grpc::ServerContext* ctx, 
                             const gps_service::StreamLocationRequest* request, 
                             grpc::ServerWriter<gps_service::StreamLocationResponse>* writer)
-{
-    spdlog::info("Got request");
+{   
     gpsd gps;
 
-    for(auto i = 0u; i < 100; i++)
-    {
-        spdlog::info("On request {}", i);
+    bool go_on = gps.good();
+    while(go_on)
+    {    
         const auto fix = gps.run_until_fix();
 
         gps_service::StreamLocationResponse res;
+        res.mutable_point()->set_timestamp(fix.timestamp);
         res.mutable_point()->set_latitude(fix.latitude);
         res.mutable_point()->set_longitude(fix.longitude);
 
-        writer->Write(res);
-    }
+        if(fix.altitude) {
+            res.mutable_point()->set_altitude(*fix.altitude);
+        }
 
-    spdlog::info("Returning");
+        if(fix.bearing) {
+            res.mutable_point()->set_bearing(*fix.bearing);
+        }
+
+        if(fix.speed) {
+            res.mutable_point()->set_speed(*fix.speed);
+        }
+
+        if(fix.climb) {
+            res.mutable_point()->set_climb(*fix.climb);
+        }
+
+        go_on = writer->Write(res);
+    }
     
     return grpc::Status::OK;
 }

@@ -2,14 +2,23 @@
 
 #include <functional>
 #include <vector>
-#include <gps.h>
+#include <memory>
+#include <optional>
 
 struct gps_fix
 {
+    double timestamp;
+
     double latitude;
     double longitude;
-    double timestamp;
+    std::optional<double> altitude;
+
+    std::optional<double> bearing;
+    std::optional<double> speed;
+    std::optional<double> climb;
 };
+
+struct gps_data_t;
 
 class gpsd
 {
@@ -19,10 +28,12 @@ public:
     gpsd();
     ~gpsd();
 
+    bool good() const;
+
     void set_observer(observer_func func);
     gps_fix run_until_fix();
 
 private:
     observer_func observer_;
-    struct gps_data_t gps_data_;
+    std::unique_ptr<gps_data_t> gps_data_;
 };
