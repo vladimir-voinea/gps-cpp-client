@@ -14,7 +14,7 @@ APP3_PATH_IN_BUILD_IMAGE="./build/src/gstreamer_app/gstreamer_app"
 
 #################
 echo Building $IMAGE_NAME:build
-docker build --build-arg BASE_IMAGE_VERSION=$BASE_IMAGE_VERSION -t $IMAGE_NAME:build . -f Dockerfile.build --progress plain
+docker build --build-arg BASE_IMAGE_VERSION=$BASE_IMAGE_VERSION -t $IMAGE_NAME:build . -f Dockerfile.build
 docker run -v $PWD:/source -it $IMAGE_NAME:build
 
 #################
