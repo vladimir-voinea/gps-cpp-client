@@ -2,16 +2,18 @@
 
 #include "gpsd.hpp"
 
+#include <spdlog/spdlog.h>
+
 grpc::Status GpsService::StreamLocation(grpc::ServerContext* ctx, 
                             const gps_service::StreamLocationRequest* request, 
                             grpc::ServerWriter<gps_service::StreamLocationResponse>* writer)
 {
-    std::cout << "Got request\n";
+    spdlog::info("Got request");
     gpsd gps;
 
     for(auto i = 0u; i < 100; i++)
     {
-        std::cout << "On " << i << '\n';
+        spdlog::info("On request {}", i);
         const auto fix = gps.run_until_fix();
 
         gps_service::StreamLocationResponse res;
@@ -21,7 +23,7 @@ grpc::Status GpsService::StreamLocation(grpc::ServerContext* ctx,
         writer->Write(res);
     }
 
-    std::cout << "Returning\n";
+    spdlog::info("Returning");
     
     return grpc::Status::OK;
 }
@@ -37,9 +39,9 @@ void GpsService::run_server()
     builder.RegisterService(&service);
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
 
-    std::cout << "Server listening on " << server_address << std::endl;
+    spdlog::info("Server listening on {}", server_address);
 
     server->Wait();
 
-    std::cout << "Done wait\n";
+    spdlog::info("Done wait");
 }

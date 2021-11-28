@@ -20,7 +20,6 @@
 #pragma once
 
 #include <memory>
-#include <iostream>
 #include <string>
 #include <thread>
 

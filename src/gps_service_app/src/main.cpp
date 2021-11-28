@@ -1,5 +1,7 @@
 #include <gps_service_lib/gps_service.hpp>
 
+#include <spdlog/spdlog.h>
+
 int main(int argc, char** argv) {
   try
   {
@@ -7,7 +9,7 @@ int main(int argc, char** argv) {
   }
   catch(const std::exception& e)
   {
-    std::cerr << e.what() << '\n';
+    spdlog::error("Exception: {}",e.what());
   }
   
 

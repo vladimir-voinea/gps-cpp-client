@@ -1,7 +1,5 @@
 #include <gps_service_client_lib/gps_service_client.hpp>
 
-#include <iostream>
-
 GpsServiceClient::GpsServiceClient(std::shared_ptr<grpc::Channel> channel)
     : stub_(gps_service::GpsService::NewStub(channel))
 {}

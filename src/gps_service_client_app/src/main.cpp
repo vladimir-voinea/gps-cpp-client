@@ -1,4 +1,5 @@
 #include <gps_service_client_lib/gps_service_client.hpp>
+#include <spdlog/spdlog.h>
 
 #include <stdlib.h>
 
@@ -8,12 +9,12 @@ int main(int argc, char** argv) {
 
     const std::string server_string = server_host + ":50051";
 
-    std::cout << "Server string: " + server_string + '\n';
+    spdlog::info("Server string: {}", server_string);
 
     GpsServiceClient client(grpc::CreateChannel(server_string, grpc::InsecureChannelCredentials()));
 
     client.StreamLocation([](auto res) {
-        std::cout << "latitude : " << res.point().latitude() << " longitude: " << res.point().longitude() << '\n';
+        spdlog::info("Latitude: {} Longitude: {}", res.point().latitude(), res.point().longitude());
         return true;
     });
 
