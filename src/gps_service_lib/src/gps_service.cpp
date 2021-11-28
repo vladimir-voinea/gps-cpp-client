@@ -6,21 +6,22 @@ grpc::Status GpsService::StreamLocation(grpc::ServerContext* ctx,
                             const gps_service::StreamLocationRequest* request, 
                             grpc::ServerWriter<gps_service::StreamLocationResponse>* writer)
 {
+    std::cout << "Got request\n";
     gpsd gps;
 
     for(auto i = 0u; i < 100; i++)
     {
-        //const auto fix = gps.run_until_fix();
-        
-        gps_service::Point point;
-        point.set_latitude(55.f);
-        point.set_longitude(33.f);
+        std::cout << "On " << i << '\n';
+        const auto fix = gps.run_until_fix();
 
         gps_service::StreamLocationResponse res;
-        res.mutable_point()->CopyFrom(point);
+        res.mutable_point()->set_latitude(fix.latitude);
+        res.mutable_point()->set_longitude(fix.longitude);
 
         writer->Write(res);
     }
+
+    std::cout << "Returning\n";
     
     return grpc::Status::OK;
 }

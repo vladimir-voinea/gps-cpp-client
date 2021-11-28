@@ -21,6 +21,7 @@ gps_fix gpsd::run_until_fix()
     for(;;)
     {
         const auto gps_read_result = gps_read(&gps_data_, NULL, 0);
+        std::cout << "Have read from gps\n";
         if (gps_read_result == -1) {
             std::cout << "error occured reading gps data. code: " << errno << " reason: " << gps_errstr(errno) << '\n';
         } else {
