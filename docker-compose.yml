@@ -4,6 +4,8 @@ services:
     image: gps_service_app
     ports:
       - "50051"
+    volumes:
+      - /var/run/gpsd.sock:/var/run/gpsd.sock
   client:
     image: gps_service_client_app
     depends_on:
