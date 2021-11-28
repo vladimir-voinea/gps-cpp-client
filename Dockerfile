@@ -1,8 +1,5 @@
 ARG BASE_IMAGE_VERSION
-FROM vladimir1/grpc_cxx:$BASE_IMAGE_VERSION as base
-
-RUN apt-get update
-RUN apt-get install -q -yy libgps-dev
+FROM vladimir1/cxx_base:$BASE_IMAGE_VERSION as base
 
 COPY ./app .
 

@@ -1,13 +1,5 @@
 ARG BASE_IMAGE_VERSION
-FROM vladimir1/grpc_cxx:$BASE_IMAGE_VERSION as base
-
-RUN apt-get update
-RUN apt-get install -q -yy cmake make libgps-dev
-
-RUN git clone https://github.com/gabime/spdlog.git -b v1.x && cd spdlog && mkdir -p build && \
-    cd build && cmake .. && make -j`nproc` && make install && cd / && rm -rf /spdlog
-
-RUN apt-get install -q -yy libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+FROM vladimir1/cxx_base:$BASE_IMAGE_VERSION as base
 
 COPY . /source
 WORKDIR /source
