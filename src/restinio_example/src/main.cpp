@@ -1,4 +1,3 @@
-
 #include "generic_controller.hpp"
 #include "book.hpp"
 
@@ -19,11 +18,12 @@ int main()
 			{ "Agatha Christie", "Sleeping Murder" },
 			{ "B. Stroustrup", "The C++ Programming Language" }
 		};
-
-		restinio::run(
+        auto controller = generic_controller_t<book_t>(std::ref(book_collection));
+		
+        restinio::run(
 			restinio::on_this_thread<traits_t>()
 				.address( "0.0.0.0" )
-				.request_handler( server_handler<book_t>( book_collection ) )
+				.request_handler(make_handler(controller))
 				.read_next_http_message_timelimit( 10s )
 				.write_http_response_timelimit( 1s )
 				.handle_request_timeout( 1s ) );
