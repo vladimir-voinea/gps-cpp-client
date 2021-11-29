@@ -15,9 +15,14 @@ class App:
         self.name = name
         self.path = path
 
-def run_command(cmd):
-    process = subprocess.Popen(cmd.split())
-    output, error = process.communicate()
+def run_command(cmd, input="", capture=False):
+    if capture == True:
+        process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        output, error = process.communicate(input)
+        return output.decode("utf-8")
+    else:
+        process = subprocess.Popen(cmd.split(), stdin=subprocess.PIPE)
+        output, error = process.communicate(input)
 
 def read_apps():
     apps = []
@@ -64,9 +69,11 @@ def build_targets(targets):
     pwd = os.getcwd()
     build_image = "docker build --rm --build-arg BASE_IMAGE_VERSION=" + BASE_IMAGE_VERSION + " -t " + BUILD_IMAGE_NAME + " . -f Dockerfile.build"
     
+    cmake_generate_cmd = "cmake .."
+    cmake_build_cmd = "cmake --build . --j " + "12" + " --target " + target_list
+
     run_build = "docker run --rm -v " + pwd + ":/source -it " + BUILD_IMAGE_NAME
-    if targets is not None:
-        run_build += " ./cmake-generate.sh && ./cmake-build.sh --target " + target_list
+    run_build += " mkdir -p ./" + BUILD_FOLDER + " && cd ./" + BUILD_FOLDER + " && " + cmake_generate_cmd + " && " + cmake_build_cmd
 
     remove_build_image = "docker rmi " + BUILD_IMAGE_NAME
 
