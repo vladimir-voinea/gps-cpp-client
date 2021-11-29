@@ -1,5 +1,6 @@
 #include "express/generic_express_controller.hpp"
 #include "book.hpp"
+#include "vector_container.hpp"
 #include "spdlog_logger.hpp"
 
 int main()
@@ -14,12 +15,12 @@ int main()
 				restinio::single_threaded_ostream_logger_t,
 				router_t >;
 
-		std::vector<book_t> book_collection{
+		vector_container<book_t> book_collection{
 			{ "Agatha Christie", "Murder on the Orient Express" },
 			{ "Agatha Christie", "Sleeping Murder" },
 			{ "B. Stroustrup", "The C++ Programming Language" }
 		};
-        auto controller = generic_express_controller_t<book_t>(std::ref(book_collection));
+        auto controller = generic_express_controller_t<vector_container<book_t>>(std::ref(book_collection));
 		
         restinio::run(
 			restinio::on_this_thread<traits_t>()

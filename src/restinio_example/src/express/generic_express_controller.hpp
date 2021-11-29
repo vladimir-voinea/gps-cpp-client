@@ -6,16 +6,14 @@
 #include <restinio/all.hpp>
 #include <json_dto/pub.hpp>
 
-
-template<typename object_t>
-using generic_collection = std::vector< object_t >;
-
-template<typename object_t>
+template<typename collection_t>
 class generic_express_controller_t : public itf_generic_express_controller
 {
-public :
-	explicit generic_express_controller_t(std::vector<object_t> & objects)
-		:	m_objects( objects )
+private:
+	using object_t = typename collection_t::value_type;
+public:
+	explicit generic_express_controller_t(collection_t& objects)
+		:	m_collection( objects )
 	{}
 
 	~generic_express_controller_t() override = default;
@@ -26,7 +24,7 @@ public :
 	req_status_t on_list(const restinio::request_handle_t& req, rr::route_params_t) const override
 	{
 		auto resp = init_resp( req->create_response() );
-		resp.set_body(json_dto::to_json(m_objects));
+		resp.set_body(json_dto::to_json(m_collection));
 
 		return resp.done();
 	}
@@ -37,9 +35,9 @@ public :
 
 		auto resp = init_resp( req->create_response() );
 
-		if(0 != id && id <= m_objects.size())
+		if(auto it = m_collection.find(id); it != m_collection.end())
 		{
-			const auto & b = m_objects[id - 1];
+			const auto & b = *it;
 			resp.set_body(json_dto::to_json<object_t>(b));
 		}
 		else
@@ -56,7 +54,7 @@ public :
 
 		try
 		{
-			m_objects.emplace_back(json_dto::from_json<object_t>(req->body()));
+			m_collection.add(json_dto::from_json<object_t>(req->body()));
 		}
 		catch(const std::exception& ex)
 		{
@@ -77,9 +75,9 @@ public :
 		{
 			auto b = json_dto::from_json<object_t>(req->body());
 
-			if(0 != id && id <= m_objects.size())
+			if(auto it = m_collection.find(id); it != m_collection.end())
 			{
-				m_objects[id - 1] = b;
+				*it = b;
 			}
 			else
 			{
@@ -101,12 +99,12 @@ public :
 
 		auto resp = init_resp(req->create_response());
 
-		if(0 != id && id <= m_objects.size())
+		if(auto it = m_collection.find(id); it != m_collection.end())
 		{
-			const auto& b = m_objects[id - 1];
+			const auto& b = *it;
 			resp.set_body(json_dto::to_json<object_t>(b));
 
-			m_objects.erase(m_objects.begin() + (id - 1));
+			m_collection.erase(it);
 		}
 		else
 		{
@@ -117,7 +115,7 @@ public :
 	}
 
 private :
-	std::vector<object_t> & m_objects;
+	collection_t& m_collection;
 
 	template <typename RESP>
 	static RESP
