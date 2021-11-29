@@ -7,4 +7,4 @@ find_package(fmt REQUIRED)
 find_package(restinio REQUIRED)
 
 add_executable(${APP_NAME} ${SRC})
-target_link_libraries(${APP_NAME} restinio::restinio pthread)
+target_link_libraries(${APP_NAME} restinio::restinio pthread spdlog::spdlog)

@@ -16,6 +16,7 @@ class App:
         self.path = path
 
 def run_command(cmd):
+    print(cmd)
     process = subprocess.Popen(cmd.split())
     output, error = process.communicate()
 
@@ -66,7 +67,7 @@ def build_targets(targets):
     
     run_build = "docker run --rm -v " + pwd + ":/source -it " + BUILD_IMAGE_NAME
     if targets is not None:
-        run_build += " ./cmake-generate.sh && ./cmake-build.sh --target " + target_list
+        run_build += " ./cmake-build.sh --target " + target_list
 
     remove_build_image = "docker rmi " + BUILD_IMAGE_NAME
 
@@ -74,11 +75,11 @@ def build_targets(targets):
 
     print("Running: " + run_build)
     run_command(run_build)
-    #run_command(remove_build_image)
+    run_command(remove_build_image)
 
 def build_individual_image(app):
     copy_executable = "cp " + app.path + " ./app"
-    build_image = "docker build --no-cache --build-arg BASE_IMAGE_VERSION=" + BASE_IMAGE_VERSION + " -t " + app.name + ":latest ."
+    build_image = "docker build --build-arg BASE_IMAGE_VERSION=" + BASE_IMAGE_VERSION + " -t " + app.name + ":latest ."
     remove_executable = "rm ./app"
 
     print("Building image for " + app.name)
