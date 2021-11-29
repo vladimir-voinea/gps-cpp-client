@@ -11,4 +11,6 @@ RUN ./vcpkg/vcpkg integrate install
 
 WORKDIR /source
 
-CMD ["/bin/bash"]
+COPY ./cmake-generate.sh .
+COPY ./cmake-build.sh .
+CMD ["./cmake-generate.sh && ./cmake-build.sh"]
