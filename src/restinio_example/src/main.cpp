@@ -1,5 +1,6 @@
-#include "generic_controller.hpp"
+#include "generic_express_controller.hpp"
 #include "book.hpp"
+#include "spdlog_logger.hpp"
 
 int main()
 {
@@ -18,7 +19,7 @@ int main()
 			{ "Agatha Christie", "Sleeping Murder" },
 			{ "B. Stroustrup", "The C++ Programming Language" }
 		};
-        auto controller = generic_controller_t<book_t>(std::ref(book_collection));
+        auto controller = generic_express_controller_t<book_t>(std::ref(book_collection));
 		
         restinio::run(
 			restinio::on_this_thread<traits_t>()

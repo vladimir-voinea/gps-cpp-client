@@ -1,6 +1,6 @@
 #pragma once
 
-#include "itf_generic_controller.hpp"
+#include "itf_generic_express_controller.hpp"
 
 #include <spdlog/spdlog.h>
 #include <restinio/all.hpp>
@@ -11,17 +11,17 @@ template<typename object_t>
 using generic_collection = std::vector< object_t >;
 
 template<typename object_t>
-class generic_controller_t : public itf_generic_controller
+class generic_express_controller_t : public itf_generic_express_controller
 {
 public :
-	explicit generic_controller_t(std::vector<object_t> & objects)
+	explicit generic_express_controller_t(std::vector<object_t> & objects)
 		:	m_objects( objects )
 	{}
 
-	~generic_controller_t() override = default;
+	~generic_express_controller_t() override = default;
 
-	generic_controller_t( const generic_controller_t & ) = delete;
-	generic_controller_t( generic_controller_t && ) = delete;
+	generic_express_controller_t( const generic_express_controller_t & ) = delete;
+	generic_express_controller_t( generic_express_controller_t && ) = delete;
 
 	req_status_t on_list(const restinio::request_handle_t& req, rr::route_params_t) const override
 	{
