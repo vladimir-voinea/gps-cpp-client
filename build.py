@@ -18,6 +18,9 @@ class App:
 def run_command(cmd):
     process = subprocess.Popen(cmd.split())
     output, error = process.communicate()
+    exit_code = process.wait()
+    if exit_code != 0:
+        raise Exception(error)
 
 def read_apps():
     apps = []

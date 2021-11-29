@@ -1,14 +1,6 @@
 ARG BASE_IMAGE_VERSION
 FROM vladimir1/cxx_base:$BASE_IMAGE_VERSION as base
 
-RUN apt-get update
-RUN apt-get install -yy -q --no-install-recommends zip unzip tar 
-
-RUN git clone https://github.com/microsoft/vcpkg
-RUN ./vcpkg/bootstrap-vcpkg.sh
-RUN ./vcpkg/vcpkg install restinio
-RUN ./vcpkg/vcpkg integrate install
-
 WORKDIR /source
 
 COPY ./cmake-build.sh .
