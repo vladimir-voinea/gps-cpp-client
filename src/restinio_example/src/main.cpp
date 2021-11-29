@@ -1,5 +1,6 @@
 
-#include "example_controller.hpp"
+#include "generic_controller.hpp"
+#include "book.hpp"
 
 int main()
 {
@@ -13,16 +14,16 @@ int main()
 				restinio::single_threaded_ostream_logger_t,
 				router_t >;
 
-		example_collection_t example_collection{
+		std::vector<book_t> book_collection{
 			{ "Agatha Christie", "Murder on the Orient Express" },
 			{ "Agatha Christie", "Sleeping Murder" },
 			{ "B. Stroustrup", "The C++ Programming Language" }
 		};
 
 		restinio::run(
-			restinio::on_this_thread< traits_t >()
+			restinio::on_this_thread<traits_t>()
 				.address( "0.0.0.0" )
-				.request_handler( server_handler( example_collection ) )
+				.request_handler( server_handler<book_t>( book_collection ) )
 				.read_next_http_message_timelimit( 10s )
 				.write_http_response_timelimit( 1s )
 				.handle_request_timeout( 1s ) );
