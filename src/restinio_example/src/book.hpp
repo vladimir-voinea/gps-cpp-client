@@ -10,19 +10,22 @@ struct book_t
 	book_t(
 		std::string author,
 		std::string title )
-		:	m_author{ std::move( author ) }
-		,	m_title{ std::move( title ) }
+		:	author{ std::move( author ) }
+		,	title{ std::move( title ) }
 	{}
 
+	std::string author;
+	std::string title;
+};
+
+namespace json_dto
+{
 	template < typename JSON_IO >
 	void
-	json_io( JSON_IO & io )
+	json_io( JSON_IO & io, book_t& book )
 	{
 		io
-			& json_dto::mandatory( "author", m_author )
-			& json_dto::mandatory( "title", m_title );
+			& json_dto::mandatory( "author", book.author )
+			& json_dto::mandatory( "title", book.title );
 	}
-
-	std::string m_author;
-	std::string m_title;
-};
+}
