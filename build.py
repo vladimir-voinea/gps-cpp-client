@@ -16,7 +16,6 @@ class App:
         self.path = path
 
 def run_command(cmd):
-    print(cmd)
     process = subprocess.Popen(cmd.split())
     output, error = process.communicate()
 
