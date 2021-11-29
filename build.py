@@ -69,11 +69,12 @@ def build_targets(targets):
     pwd = os.getcwd()
     build_image = "docker build --rm --build-arg BASE_IMAGE_VERSION=" + BASE_IMAGE_VERSION + " -t " + BUILD_IMAGE_NAME + " . -f Dockerfile.build"
     
+    create_build_folder = "mkdir -p ./" + BUILD_FOLDER + " && cd ./" + BUILD_FOLDER
     cmake_generate_cmd = "cmake .."
-    cmake_build_cmd = "cmake --build . --j " + "12" + " --target " + target_list
+    cmake_build_cmd = "cmake --build . --j " + run_command("nproc", "", True) + " --target " + target_list
 
     run_build = "docker run --rm -v " + pwd + ":/source -it " + BUILD_IMAGE_NAME
-    run_build += " mkdir -p ./" + BUILD_FOLDER + " && cd ./" + BUILD_FOLDER + " && " + cmake_generate_cmd + " && " + cmake_build_cmd
+    run_build += " " + create_build_folder + " && " + cmake_generate_cmd + " && " + cmake_build_cmd
 
     remove_build_image = "docker rmi " + BUILD_IMAGE_NAME
 
@@ -81,7 +82,7 @@ def build_targets(targets):
 
     print("Running: " + run_build)
     run_command(run_build)
-    #run_command(remove_build_image)
+    run_command(remove_build_image)
 
 def build_individual_image(app):
     copy_executable = "cp " + app.path + " ./app"
