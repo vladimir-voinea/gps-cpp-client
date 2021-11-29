@@ -1,0 +1,15 @@
+[
+    {
+        "name": "gps_service_app"
+    },
+    {
+        "name": "gps_service_client_app"
+    },
+    {
+        "name": "gstreamer_app",
+        "path": "src/gstreamer_app/gstreamer_app"
+    },
+    {
+        "name": "restinio_example"
+    }
+]
