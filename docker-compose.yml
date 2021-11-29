@@ -24,3 +24,13 @@ services:
     command: -D2 /dev/ttyACM0
     logging:
       driver: "none"
+  gstreamer_app:
+    image: gstreamer_app
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /mnt/wslg:/mnt/wslg
+    environment:
+      - DISPLAY 
+      - WAYLAND_DISPLAY 
+      - XDG_RUNTIME_DIR 
+      - PULSE_SERVER
