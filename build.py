@@ -7,6 +7,7 @@ import subprocess
 APPS_FILE = "apps.json"
 BUILD_IMAGE_NAME = "cxx_buildimg"
 BASE_IMAGE_VERSION = "latest"
+BUILD_FOLDER = ".build"
 
 class App:
     def __init__(self, name, path):
@@ -26,9 +27,9 @@ def read_apps():
         name = i["name"]
         path = ""
         if "path" in i:
-            path = "./build/" + i["path"]
+            path = "./" + BUILD_FOLDER + "/" + i["path"]
         else:
-            path = "./build/src/" + name + "/" + name
+            path = "./" + BUILD_FOLDER + "/src/" + name + "/" + name
 
         app = App(name, path)
         apps.append(app)
