@@ -23,11 +23,12 @@ std::function<R(Args...)> Attach(R (T::*f)(Args...) const, U p)
 
 }
 
-template<typename collection_t>
-class generic_epr_controller_t : public itf_generic_epr_controller
+template<typename collection_t, typename per_request_data_factory_t>
+class generic_epr_controller_t : public itf_generic_epr_controller<per_request_data_factory_t>
 {
 private:
 	using object_t = typename collection_t::value_type;
+    using request_handle_t = typename itf_generic_epr_controller<per_request_data_factory_t>::request_handle_t;
 public:
 	explicit generic_epr_controller_t(collection_t& objects)
 		:	m_collection( objects )
@@ -38,17 +39,17 @@ public:
 	generic_epr_controller_t( const generic_epr_controller_t & ) = delete;
 	generic_epr_controller_t( generic_epr_controller_t && ) = delete;
 
-	req_status_t on_list(const restinio::request_handle_t& req) const override
+	req_status_t on_list(const request_handle_t& req) const override
 	{
-		auto resp = init_resp( req->create_response() );
+		auto resp = init_resp(req->create_response());
 		resp.set_body(json_dto::to_json(m_collection));
 
 		return resp.done();
 	}
 
-	req_status_t on_get_by(const restinio::request_handle_t& req, std::uint64_t id) override
+	req_status_t on_get_by(const request_handle_t& req, std::uint64_t id) override
 	{
-		auto resp = init_resp( req->create_response() );
+		auto resp = init_resp(req->create_response());
 
 		if(auto it = m_collection.find(id); it != m_collection.end())
 		{
@@ -63,9 +64,9 @@ public:
 		return resp.done();
 	}
 
-	req_status_t on_new(const restinio::request_handle_t& req) override
+	req_status_t on_new(const request_handle_t& req) override
 	{
-		auto resp = init_resp( req->create_response() );
+		auto resp = init_resp(req->create_response());
 
 		try
 		{
@@ -80,7 +81,7 @@ public:
 		return resp.done();
 	}
 
-	req_status_t on_update(const restinio::request_handle_t& req, std::uint64_t id) override
+	req_status_t on_update(const request_handle_t& req, std::uint64_t id) override
 	{
 		auto resp = init_resp(req->create_response());
 
@@ -106,7 +107,7 @@ public:
 		return resp.done();
 	}
 
-	req_status_t on_delete(const restinio::request_handle_t& req, std::uint64_t id) override
+	req_status_t on_delete(const request_handle_t& req, std::uint64_t id) override
 	{
 		auto resp = init_resp(req->create_response());
 
@@ -157,11 +158,12 @@ template<typename controller_t>
 auto make_handler(controller_t& controller)
 {
     namespace epr = restinio::router::easy_parser_router;
-	auto router = std::make_unique<router_t>();
 
-	auto by = [&](auto method) {
-		using namespace std::placeholders;
-		return Attach(method, std::addressof(controller));
+	using router_t = restinio::router::generic_easy_parser_router_t<typename controller_t::per_request_data_factory_type>;
+    auto router = std::make_unique<router_t>();
+
+	auto by = [&](auto method, auto&& ...args) mutable {
+        return Attach(method, std::addressof(controller));
 	};
 
 	auto method_not_allowed = [](const auto & req, auto&& ...args) {
@@ -183,7 +185,7 @@ auto make_handler(controller_t& controller)
     auto id_p = epr::non_negative_decimal_number_p<std::uint64_t>();
 
 	// Handlers for '/:id' path.
-	router->http_get(epr::path_to_params("/", id_p), by(&controller_t::on_get_by));
+	router->http_get(epr::path_to_params("/", id_p), by(&controller_t::on_get_by, controller));
 	router->http_put(epr::path_to_params("/", id_p), by(&controller_t::on_update));
 	router->http_delete(epr::path_to_params("/", id_p), by(&controller_t::on_delete));
 
