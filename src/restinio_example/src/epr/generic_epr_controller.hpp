@@ -21,18 +21,6 @@ std::function<R(Args...)> Attach(R (T::*f)(Args...) const, U p)
     return [p,f](Args... args)->R { return (p->*f)(std::forward<Args>(args)...); };
 };
 
-// template<typename R, typename T, typename U, typename Args>
-// std::function<R(const Args&)> Attach(R (T::*f)(const Args&), U p)
-// {
-//     return [p,f](const Args& args)->R { return (p->*f)(args); };
-// };
-
-// template<typename R, typename T, typename U, typename Arg>
-// std::function<R(Arg&&)> Attach(R (T::*f)(Arg&&), U p)
-// {
-//     return [p,f](Arg&& arg)->R { return (p->*f)(arg); };
-// };
-
 }
 
 template<typename collection_t>
