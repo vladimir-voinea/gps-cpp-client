@@ -13,7 +13,7 @@ struct traits : public restinio::default_traits_t
 {
     using extra_data_factory_t = generic_per_request_data_factory<per_request_data>;
     using request_handler_t = restinio::router::generic_easy_parser_router_t<traits::extra_data_factory_t>;
-    using logger_t = restinio::single_threaded_ostream_logger_t;
+    using logger_t = single_threaded_spdlog_logger_t;
 };
 
 int main()
@@ -29,7 +29,6 @@ int main()
 			{ "B. Stroustrup", "The C++ Programming Language" }
 		};
 
-        auto logger = std::make_unique<traits::logger_t>();
         auto controller = generic_epr_controller_t<vector_container<book_t>, traits::extra_data_factory_t>(std::ref(book_collection));
 		
         restinio::run(

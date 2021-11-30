@@ -4,17 +4,14 @@
 
 #include <chrono>
 #include <mutex>
-
 #include <spdlog/spdlog.h>
 
 template < typename Lock >
 class spdlog_logger_t
 {
 	public:
-        spdlog_logger_t() noexcept = default;
-        spdlog_logger_t(int) noexcept {}
-        spdlog_logger_t(std::ostream &) noexcept
-		{}
+        spdlog_logger_t() noexcept
+        {}
 
 		spdlog_logger_t( const spdlog_logger_t & ) = delete;
 		spdlog_logger_t & operator = ( const spdlog_logger_t & ) = delete;
@@ -24,7 +21,7 @@ class spdlog_logger_t
 		trace(Message_Builder&& msg_builder )
 		{
             std::lock_guard<Lock> hold(m_lock);
-            spdlog::debug(msg_builder());
+            spdlog::trace(msg_builder());
 		}
 
 		template< typename Message_Builder >
@@ -32,7 +29,7 @@ class spdlog_logger_t
 		info(Message_Builder&& msg_builder )
 		{
             std::lock_guard<Lock> hold(m_lock);
-            spdlog::debug(msg_builder());
+            spdlog::info(msg_builder());
 		}
 
 		template< typename Message_Builder >
@@ -40,7 +37,7 @@ class spdlog_logger_t
 		warn(Message_Builder&& msg_builder )
 		{
             std::lock_guard<Lock> hold(m_lock);
-            spdlog::debug(msg_builder());
+            spdlog::warn(msg_builder());
 		}
 
 		template< typename Message_Builder >
@@ -48,7 +45,7 @@ class spdlog_logger_t
 		error(Message_Builder&& msg_builder )
 		{
             std::lock_guard<Lock> hold(m_lock);
-            spdlog::debug(msg_builder());
+            spdlog::error(msg_builder());
 		}
 
 	private:
