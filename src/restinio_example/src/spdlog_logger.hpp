@@ -12,6 +12,7 @@ class spdlog_logger_t
 {
 	public:
         spdlog_logger_t() noexcept = default;
+        spdlog_logger_t(int) noexcept {}
         spdlog_logger_t(std::ostream &) noexcept
 		{}
 
