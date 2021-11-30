@@ -67,12 +67,12 @@ public:
 
     iterator find(index_type index)
     {
-        return m_vec.begin() + index;
+        return index < m_vec.size() ? m_vec.begin() + index : end();
     }
 
     const_iterator find(index_type index) const
     {
-        return m_vec.cbegin() + index;
+        return index < m_vec.size() ? m_vec.cbegin() + index : end();
     }
 
     template<typename... Args>

@@ -1,4 +1,4 @@
-#include "express/generic_express_controller.hpp"
+#include "epr/generic_epr_controller.hpp"
 #include "book.hpp"
 #include "vector_container.hpp"
 #include "spdlog_logger.hpp"
@@ -20,7 +20,7 @@ int main()
 			{ "Agatha Christie", "Sleeping Murder" },
 			{ "B. Stroustrup", "The C++ Programming Language" }
 		};
-        auto controller = generic_express_controller_t<vector_container<book_t>>(std::ref(book_collection));
+        auto controller = generic_epr_controller_t<vector_container<book_t>>(std::ref(book_collection));
 		
         restinio::run(
 			restinio::on_this_thread<traits_t>()
