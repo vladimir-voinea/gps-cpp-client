@@ -6,7 +6,7 @@
 
 struct per_request_data
 {
-    std::string data;
+    std::string some_stuff;
 };
 
 struct traits : public restinio::default_traits_t
